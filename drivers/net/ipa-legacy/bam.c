@@ -452,6 +452,8 @@ static void bam_trans_commit(struct ipa_dma_trans *trans, bool unused)
 		if (opcode != IPA_CMD_NONE) {
 			len = opcode;
 			dma_flags |= DMA_PREP_IMM_CMD;
+		} else {
+			continue;
 		}
 
 		if (last_tre)
