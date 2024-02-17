@@ -178,7 +178,7 @@
 };
 
 &panel {
-	compatible = "xiaomi,oxygen-panel";
+	compatible = "xiaomi,oxygen-panel", "mdss,tianma,r63350"; 
 };
 
 &sound_card {
