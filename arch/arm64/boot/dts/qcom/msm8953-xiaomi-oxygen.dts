@@ -2,6 +2,7 @@
 /dts-v1/;
 
 #include "msm8953-xiaomi-common.dtsi"
+#include "oxygen/display.dtsi"
 #include <dt-bindings/input/atmel-maxtouch.h>
 
 /delete-node/ &qseecom_mem;
