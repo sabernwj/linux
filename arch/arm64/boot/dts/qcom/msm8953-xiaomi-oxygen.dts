@@ -2,7 +2,6 @@
 /dts-v1/;
 
 #include "msm8953-xiaomi-common.dtsi"
-#include "oxygen/display.dtsi"
 #include <dt-bindings/input/atmel-maxtouch.h>
 
 /delete-node/ &qseecom_mem;
@@ -147,13 +146,6 @@
 	voltage-max-design-microvolt = <4380000>;
 };
 
-&ft5406_ts {
-	status = "disabled";
-
-	compatible = "edt,edt-ft5336", "edt,edt-ft5306";
-	touchscreen-size-x = <1080>;
-	touchscreen-size-y = <1920>;
-};
 
 &i2c_3 {
 	status = "okay";
@@ -180,6 +172,9 @@
 
 &panel {
 	compatible = "xiaomi,oxygen-panel"; 
+	qcom,mdss_dsi_tianma_r63350_1080p_video {
+		compatible = "xiaomi,tianma-r63350";
+	};
 };
 
 &sound_card {
