@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-&mdss_mdp {
+&mdp {
 	dsi_auo_r61322_1080p_vid: qcom,mdss_dsi_auo_r61322_1080p_video {
 		qcom,mdss-dsi-panel-name = "auo r61322 1080p video mode dsi panel";
 		qcom,mdss-dsi-panel-type = "dsi_video_mode";
