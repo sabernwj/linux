@@ -172,10 +172,14 @@
 
 &panel {
 	compatible = "xiaomi,oxygen-panel"; 
-	qcom,mdss_dsi_tianma_r63350_1080p_video {
-		compatible = "xiaomi,tianma-r63350";
-	};
 };
+&ft5406_ts {
+	status = "okay";
+
+	touchscreen-size-x = <1080>;
+	touchscreen-size-y = <1920>;
+};
+
 
 &sound_card {
 	model = "xiaomi-oxygen";
