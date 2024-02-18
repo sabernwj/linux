@@ -1814,35 +1814,6 @@ static ssize_t ft5x46_panel_vendor_show(struct device *dev,
 	return count;
 }
 
-static ssize_t ft5x46_switch_keypad_mode_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
-	int error;
-	unsigned long val;
-	struct ft5x46_data *ft5x46 = dev_get_drvdata(dev);
-
-	error = sstrtoul(buf, 0, &val);
-    
-	if (val) {
-		// Disable keypad
-		clear_bit(KEY_BACK, ft5x46->input->keybit);
-		clear_bit(KEY_HOME, ft5x46->input->keybit);
-		clear_bit(KEY_MENU, ft5x46->input->keybit);
-	} else {
-		// Enable keypad
-		set_bit(KEY_BACK, ft5x46->input->keybit);
-		set_bit(KEY_HOME, ft5x46->input->keybit);
-		set_bit(KEY_MENU, ft5x46->input->keybit);
-	}
-
-	return error ? : count;
-}
-
-static ssize_t ft5x46_switch_keypad_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
-{
-	struct ft5x46_data *ft5x46 = dev_get_drvdata(dev);
-	return sprintf(buf, "%d\n", ft5x46->keypad_mode_enable);
-}
-
 /* sysfs */
 static DEVICE_ATTR(tpfwver, 0644, ft5x46_tpfwver_show, NULL);
 static DEVICE_ATTR(object, 0644, ft5x46_object_show, ft5x46_object_store);
@@ -1855,7 +1826,6 @@ static DEVICE_ATTR(config_info, 0644, ft5x46_config_info_show, NULL);
 static DEVICE_ATTR(wakeup_mode, 0644, ft5x46_wakeup_mode_show, ft5x46_wakeup_mode_store);
 static DEVICE_ATTR(panel_color, 0444, ft5x46_panel_color_show, NULL);
 static DEVICE_ATTR(panel_vendor, 0444, ft5x46_panel_vendor_show, NULL);
-static DEVICE_ATTR(keypad_mode, 0644, ft5x46_switch_keypad_mode_show, ft5x46_switch_keypad_mode_store);
 
 static struct attribute *ft5x46_attrs[] = {
 	&dev_attr_tpfwver.attr,
@@ -1869,58 +1839,12 @@ static struct attribute *ft5x46_attrs[] = {
 	&dev_attr_wakeup_mode.attr,
 	&dev_attr_panel_color.attr,
 	&dev_attr_panel_vendor.attr,
-	&dev_attr_keypad_mode.attr,
 	NULL
 };
 
 static const struct attribute_group ft5x46_attr_group = {
 	.attrs = ft5x46_attrs
 };
-
-static int ft5x46_proc_init(struct kernfs_node *sysfs_node_parent)
-{
-	int ret = 0;
-	char *buf, *path = NULL;
-	char *double_tap_sysfs_node, *key_disabler_sysfs_node;
-	struct proc_dir_entry *proc_entry_tp = NULL;
-	struct proc_dir_entry *proc_symlink_tmp  = NULL;
-
-	buf = kzalloc(PATH_MAX, GFP_KERNEL);
-	if (buf)
-		path = kernfs_path(sysfs_node_parent, buf, PATH_MAX);
-
-	proc_entry_tp = proc_mkdir("touchpanel", NULL);
-	if (proc_entry_tp == NULL) {
-		ret = -ENOMEM;
-		pr_err("%s: Couldn't create touchpanel\n", __func__);
-	}
-
-	double_tap_sysfs_node = kzalloc(PATH_MAX, GFP_KERNEL);
-	if (double_tap_sysfs_node)
-		sprintf(double_tap_sysfs_node, "/sys%s/%s", path, "wakeup_mode");
-	proc_symlink_tmp = proc_symlink("enable_dt2w",
-			proc_entry_tp, double_tap_sysfs_node);
-	if (proc_symlink_tmp == NULL) {
-		ret = -ENOMEM;
-		pr_err("%s: Couldn't create enable_dt2w symlink\n", __func__);
-	}
-
-	key_disabler_sysfs_node = kzalloc(PATH_MAX, GFP_KERNEL);
-	if (key_disabler_sysfs_node)
-		sprintf(key_disabler_sysfs_node, "/sys%s/%s", path, "keypad_mode");
-	proc_symlink_tmp = proc_symlink("capacitive_keys_disable",
-			proc_entry_tp, key_disabler_sysfs_node);
-	if (proc_symlink_tmp == NULL) {
-		ret = -ENOMEM;
-		pr_err("%s: Couldn't create capacitive_keys_disable symlink\n", __func__);
-	}
-
-	kfree(buf);
-	kfree(double_tap_sysfs_node);
-	kfree(key_disabler_sysfs_node);
-
-	return ret;
-}
 
 static int ft5x46_power_on(struct ft5x46_data *data, bool on)
 {
@@ -2163,13 +2087,11 @@ static int ft5x46_parse_dt(struct device *dev,
 	pdata->i2c_pull_up = of_property_read_bool(np,
 						"ft5x46_i2c,i2c-pull-up");
 	/* reset, irq gpio info */
-	pdata->reset_gpio = of_get_named_gpio_flags(np, "ft5x46_i2c,reset-gpio",
-				0, &pdata->reset_gpio_flags);
+	pdata->reset_gpio = of_get_named_gpio(np, "ft5x46_i2c,reset-gpio",0);
 	if (pdata->reset_gpio < 0)
 		return pdata->reset_gpio;
 
-	pdata->irq_gpio = of_get_named_gpio_flags(np, "ft5x46_i2c,irq-gpio",
-				0, &pdata->irq_gpio_flags);
+	pdata->irq_gpio = of_get_named_gpio(np, "ft5x46_i2c,irq-gpio",0);
 	if (pdata->irq_gpio < 0)
 		return pdata->irq_gpio;
 
@@ -2597,9 +2519,9 @@ static ssize_t ft5x46_apk_debug_write(struct file *file, const char __user *buff
 	return buflen;
 }
 
-static const struct file_operations ft5x46_proc_operations = {
-	.read		= ft5x46_apk_debug_read,
-	.write		= ft5x46_apk_debug_write,
+static const struct proc_ops  ft5x46_proc_operations = {
+	.proc_read		= ft5x46_apk_debug_read,
+	.proc_write		= ft5x46_apk_debug_write,
 };
 
 static int ft5x46_create_apk_debug_channel(struct ft5x46_data *ft5x46)
@@ -2904,7 +2826,6 @@ struct ft5x46_data *ft5x46_probe(struct device *dev,
 	set_bit(EV_ABS, ft5x46->input->evbit);
 	set_bit(BTN_TOUCH, ft5x46->input->keybit);
 
-	ft5x46->keypad_mode_enable = true;
 	set_bit(KEY_HOME, ft5x46->input->keybit);
 	set_bit(KEY_MENU, ft5x46->input->keybit);
 	set_bit(KEY_BACK, ft5x46->input->keybit);
@@ -2922,12 +2843,10 @@ struct ft5x46_data *ft5x46_probe(struct device *dev,
 	} else {
 		dev_info(dev, "ft5x46 chip id = %02x\n", ft5x46->chip_id);
 	}
-	update_hardware_info(TYPE_TOUCH, 3);
 	error = ft5x46_get_lockdown_info(ft5x46);
-	if (error)
+	if (error) {
 		dev_err(dev, "Failed to get lockdown info\n");
-	else
-		update_hardware_info(TYPE_TP_MAKER, ft5x46->lockdown_info[0] - 0x30);
+	}
 	error = ft5x46_load_firmware(ft5x46, pdata->firmware, NULL);
 	if (error) {
 		dev_err(dev, "fail to load firmware\n");
@@ -2956,7 +2875,7 @@ struct ft5x46_data *ft5x46_probe(struct device *dev,
 
 	/* start interrupt process */
 	error = request_threaded_irq(ft5x46->irq, NULL, ft5x46_interrupt,
-				IRQF_TRIGGER_FALLING | IRQF_ONESHOT, "ft5x46", ft5x46);
+				IRQF_TRIGGER_FALLING | IRQF_ONESHOT , "ft5x46", ft5x46);
 	if (error) {
 		dev_err(dev, "fail to request interrupt\n");
 		goto err_free_phys;
@@ -2969,8 +2888,6 @@ struct ft5x46_data *ft5x46_probe(struct device *dev,
 		dev_err(dev, "fail to export sysfs entires\n");
 		goto err_free_irq;
 	}
-
-	ft5x46_proc_init(dev->kobj.sd);
 
 	error = ft5x46_configure_sleep(ft5x46, true);
 	if (error) {
