@@ -112,6 +112,25 @@
 					"0", "0", "1";
 		};
 	};
+	ft5x46_ts: touchscreen@38 {
+		compatible = "ft,ft5x46_i2c";
+		reg = <0x38>;
+
+		interrupt-parent = <&tlmm>;
+		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
+
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&ts_reset_active &ts_int_active>;
+		pinctrl-1 = <&ts_reset_suspend &ts_int_suspend>;
+
+		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
+
+		iovcc-supply = <&pm8953_l6>;
+		vcc-supply = <&pm8953_l10>;
+		touchscreen-size-x = <1080>;
+		touchscreen-size-y = <1920>;
+		status = "okay";
+	};
 };
 
 &aw2013_led {
@@ -173,25 +192,7 @@
 &panel {
 	compatible = "xiaomi,oxygen-panel"; 
 };
-ft5x46_ts: touchscreen@38 {
-	compatible = "ft,ft5x46_i2c";
-	reg = <0x38>;
 
-	interrupt-parent = <&tlmm>;
-	interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
-
-	pinctrl-names = "default", "sleep";
-	pinctrl-0 = <&ts_reset_active &ts_int_active>;
-	pinctrl-1 = <&ts_reset_suspend &ts_int_suspend>;
-
-	reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-
-	iovcc-supply = <&pm8953_l6>;
-	vcc-supply = <&pm8953_l10>;
-	touchscreen-size-x = <1080>;
-	touchscreen-size-y = <1920>;
-	status = "okay";
-};
 
 
 
