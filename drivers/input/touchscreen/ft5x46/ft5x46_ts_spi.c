@@ -15,7 +15,7 @@
 #include <linux/input.h>
 #include <linux/module.h>
 #include <linux/spi/spi.h>
-#include "ft5x46_ts.h"
+#include "linux/input/ft5x46_ts.h"
 
 #define FT5X0X_SPI_READ			0x8000
 
@@ -92,11 +92,10 @@ static int ft5x46_spi_probe(struct spi_device *spi)
 	return 0;
 }
 
-static int ft5x46_spi_remove(struct spi_device *spi)
+static void ft5x46_spi_remove(struct spi_device *spi)
 {
 	struct ft5x46_data *ft5x46 = spi_get_drvdata(spi);
 	ft5x46_remove(ft5x46);
-	return 0;
 }
 
 static const struct spi_device_id ft5x46_spi_id[] = {
@@ -119,7 +118,7 @@ static int __init ft5x46_spi_init(void)
 {
 	return spi_register_driver(&ft5x46_spi_driver);
 }
-module_init(ft5x0x_spi_init);
+module_init(ft5x46_spi_init);
 
 static void __exit ft5x46_spi_exit(void)
 {
