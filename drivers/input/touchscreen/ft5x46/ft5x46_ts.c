@@ -2677,8 +2677,7 @@ struct ft5x46_data *ft5x46_probe(struct device *dev,
 	struct ft5x46_data *ft5x46;
 	struct ft5x46_ts_platform_data *pdata;
 
-	printk(KERN_INFO "FT5X46 Touchscreen driver loaded.\n");
-	pr_err("FT5X46 Touchscreen driver loaded.");
+	dev_err(dev,"Try FT5X46 Touchscreen driver loaded.");
 	/* check input argument */
 	if (dev->of_node) {
 		pdata = devm_kzalloc(dev,

@@ -151,6 +151,7 @@ static int ft5x46_i2c_probe(struct i2c_client *client,
 				const struct i2c_device_id *id)
 {
 	struct ft5x46_data *ft5x46;
+	dev_err(&client->dev, "Try FT5X46_IC driver loaded");
 
 	if (!i2c_check_functionality(client->adapter,
 				I2C_FUNC_SMBUS_I2C_BLOCK)) {
@@ -237,17 +238,21 @@ static struct i2c_driver ft5x46_i2c_driver = {
 	.id_table      = ft5x46_i2c_id,
 };
 
-static int __init ft5x46_i2c_init(void)
-{
-	return i2c_add_driver(&ft5x46_i2c_driver);
-}
-late_initcall(ft5x46_i2c_init);
+// static int __init ft5x46_i2c_init(void)
+// {
+// 	return i2c_add_driver(&ft5x46_i2c_driver);
+// }
+// late_initcall(ft5x46_i2c_init);
 
-static void __exit ft5x46_i2c_exit(void)
-{
-	i2c_del_driver(&ft5x46_i2c_driver);
-}
-module_exit(ft5x46_i2c_exit);
+// static void __exit ft5x46_i2c_exit(void)
+// {
+// 	i2c_del_driver(&ft5x46_i2c_driver);
+// }
+// module_exit(ft5x46_i2c_exit);
+
+MODULE_DEVICE_TABLE(i2c, ft5x46_i2c_id);
+MODULE_DEVICE_TABLE(of, ft5x46_match_table);
+module_i2c_driver(ft5x46_i2c_driver);
 
 MODULE_ALIAS("i2c:ft5x46_i2c");
 MODULE_AUTHOR("Tao Jun <taojun@xiaomi.com>");
