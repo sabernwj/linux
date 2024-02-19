@@ -177,7 +177,7 @@
 		interrupt-parent = <&tlmm>;
 		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
 
-		pinctrl-names = "default", "sleep";
+		pinctrl-names = "pmx_ts_active", "pmx_ts_suspend";
 		pinctrl-0 = <&ts_reset_active &ts_int_active>;
 		pinctrl-1 = <&ts_reset_suspend &ts_int_suspend>;
 
