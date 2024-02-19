@@ -218,7 +218,7 @@
 	ft5x46_i2c,y-max = <1920>;
 	ft5x46_i2c,z-max = <255>;
 	ft5x46_i2c,w-max = <200>;
-	ft5x46_i2c,reset-gpio = <&tlmm 64 0x00>;
+	// ft5x46_i2c,reset-gpio = <&tlmm 64 0x00>;
 	ft5x46_i2c,irq-gpio = <&tlmm 65 0x2008>;
 	ft5x46_i2c,landing-jiffies = <1000>;
 	ft5x46_i2c,landing-threshold = <16>;

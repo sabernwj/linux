@@ -150,7 +150,7 @@ static const struct ft5x46_bus_ops ft5x46_i2c_bops = {
 static int ft5x46_i2c_probe(struct i2c_client *client)
 {
 	struct ft5x46_data *ft5x46;
-	dev_err(&client->dev, "Try FT5X46_IC driver loaded");
+	dev_info(&client->dev, "Try FT5X46_IC driver loaded");
 	if (!i2c_check_functionality(client->adapter,
 				I2C_FUNC_SMBUS_I2C_BLOCK)) {
 		dev_err(&client->dev, "incompatible i2c adapter.");
