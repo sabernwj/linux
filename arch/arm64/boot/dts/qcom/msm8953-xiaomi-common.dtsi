@@ -44,7 +44,7 @@
 
 		reset-gpios = <&tlmm 61 GPIO_ACTIVE_LOW>;
 
-		pinctrl-names = "default", "sleep";
+		pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
 		pinctrl-0 = <&pmx_mdss_default &mdss_te_default>;
 		pinctrl-1 = <&pmx_mdss_sleep &mdss_te_default>;
 
