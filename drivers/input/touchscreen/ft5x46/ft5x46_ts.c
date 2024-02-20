@@ -2849,10 +2849,10 @@ struct ft5x46_data *ft5x46_probe(struct device *dev,
 		dev_err(dev, "Failed to get lockdown info\n");
 	}
 	error = ft5x46_load_firmware(ft5x46, pdata->firmware, NULL);
-	if (error) {
-		dev_err(dev, "fail to load firmware\n");
-		goto err_free_input;
-	}
+	// if (error) {
+	// 	dev_err(dev, "fail to load firmware\n");
+	// 	goto err_free_input;
+	// }
 	error = ft5x46_read_config_info(ft5x46);
 	if (error) {
 		dev_err(dev, "Failed to read config info\n");

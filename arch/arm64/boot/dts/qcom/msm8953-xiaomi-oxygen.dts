@@ -206,9 +206,9 @@
 	// vddio-supply = <&tp1v8_vreg>;
 	// vdd-supply = <&tp2v8_vreg>;
 	/* pins used by touchscreen */
-	// pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
-	// pinctrl-0 = <&ts_int_active &ts_reset_active>;
-	// pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+	pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
+	pinctrl-0 = <&ts_int_active &ts_reset_active>;
+	pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
 	ft5x46_i2c,i2c-pull-up;
 	ft5x46_i2c,irqflags = <0x2008>;
 	ft5x46_i2c,x-max = <1080>;
