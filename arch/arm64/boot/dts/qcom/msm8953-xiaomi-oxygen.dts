@@ -147,55 +147,32 @@
 };
 
 
-&i2c_3 {
-	status = "okay";
-
-	touchscreen@4a {
-		compatible = "atmel,maxtouch";
-		reg = <0x4a>;
-
-		interrupt-parent = <&tlmm>;
-		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
-
-		pinctrl-0 = <&ts_reset_active &ts_int_active>;
-		pinctrl-1 = <&ts_reset_suspend &ts_int_suspend>;
-		pinctrl-names = "default", "sleep";
-
-		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-
-		vdda-supply = <&pm8953_l5>;
-		vdd-supply = <&pm8953_l10>;
-
-		atmel,wakeup-method = <ATMEL_MXT_WAKEUP_I2C_SCL>;
-	};
-};
-
 &panel {
 	compatible = "xiaomi,oxygen-panel"; 
 };
 
-// &soc {
-// 	tp1v8_vreg: tp1v8_vreg {
-// 		compatible = "regulator-fixed";
-// 		regulator-name = "tp1v8_vreg";
-// 		regulator-min-microvolt = <1800000>;
-// 		regulator-max-microvolt = <1800000>;
-// 		gpio = <&tlmm 61 0>;
-// 		startup-delay-us = <5000>;
-// 		enable-active-high;
-// 	};
+&i2c_3 {
+	tp1v8_vreg: tp1v8_vreg {
+		compatible = "regulator-fixed";
+		regulator-name = "tp1v8_vreg";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		gpio = <&tlmm 61 0>;
+		startup-delay-us = <5000>;
+		enable-active-high;
+	};
 
-// 	tp2v8_vreg: tp2v8_vreg {
-// 		compatible = "regulator-fixed";
-// 		regulator-name = "tp2v8_vreg";
-// 		regulator-min-microvolt = <2800000>;
-// 		regulator-max-microvolt = <2800000>;
-// 		gpio = <&tlmm  128 0>;
-// 		startup-delay-us = <5000>;
-// 		enable-active-high;
-// 	};
+	tp2v8_vreg: tp2v8_vreg {
+		compatible = "regulator-fixed";
+		regulator-name = "tp2v8_vreg";
+		regulator-min-microvolt = <2800000>;
+		regulator-max-microvolt = <2800000>;
+		gpio = <&tlmm  128 0>;
+		startup-delay-us = <5000>;
+		enable-active-high;
+	};
 
-// };
+};
 
 &ft5x46_ts {
 	status = "okay";
@@ -203,8 +180,8 @@
 	touchscreen-size-y = <1920>;
 
 
-	// vddio-supply = <&tp1v8_vreg>;
-	// vdd-supply = <&tp2v8_vreg>;
+	vddio-supply = <&tp1v8_vreg>;
+	vdd-supply = <&tp2v8_vreg>;
 	/* pins used by touchscreen */
 	pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
 	pinctrl-0 = <&ts_int_active &ts_reset_active>;
@@ -215,7 +192,7 @@
 	ft5x46_i2c,y-max = <1920>;
 	ft5x46_i2c,z-max = <255>;
 	ft5x46_i2c,w-max = <200>;
-	// ft5x46_i2c,reset-gpio = <&tlmm 64 0x00>;
+	ft5x46_i2c,reset-gpio = <&tlmm 64 0x00>;
 	ft5x46_i2c,irq-gpio = <&tlmm 65 0x2008>;
 	ft5x46_i2c,landing-jiffies = <1000>;
 	ft5x46_i2c,landing-threshold = <16>;
