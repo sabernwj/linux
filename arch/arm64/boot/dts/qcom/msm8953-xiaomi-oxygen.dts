@@ -151,7 +151,7 @@
 	compatible = "xiaomi,oxygen-panel"; 
 };
 
-&i2c_3 {
+&soc {
 	tp1v8_vreg: tp1v8_vreg {
 		compatible = "regulator-fixed";
 		regulator-name = "tp1v8_vreg";
