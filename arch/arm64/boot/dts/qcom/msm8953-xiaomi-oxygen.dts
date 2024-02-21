@@ -7,6 +7,7 @@
 /delete-node/ &cont_splash_mem;
 /delete-node/ &qseecom_mem;
 /delete-node/ &wcnss_fw_mem;
+/delete-node/ &adsp_fw_mem;
 
 / {
 	qcom,msm-id = <293 0x0>;
@@ -65,7 +66,10 @@
 			no-map;
 		};
 
-
+		adsp_fw_mem: adsp@8d600000 {
+			reg = <0x0 0x8d600000 0x0 0x1200000>;
+			no-map;
+		};
 		wcnss_fw_mem: wcnss@8e800000 {
 			reg = <0x0 0x8e800000 0x0 0x700000>;
 			no-map;
