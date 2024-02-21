@@ -4,9 +4,9 @@
 #include "msm8953-xiaomi-common.dtsi"
 #include <dt-bindings/input/atmel-maxtouch.h>
 
-/delete-node/ &adsp_fw_mem;
+/delete-node/ &cont_splash_mem;
 /delete-node/ &qseecom_mem;
-/delete-node/ &wcnss_fw_mem;
+
 / {
 	qcom,msm-id = <293 0x0>;
 	qcom,board-id = <26 0>;
@@ -64,10 +64,6 @@
 			no-map;
 		};
 
-		adsp_fw_mem: adsp@8d600000 {
-			reg = <0x0 0x8d600000 0x0 0x1200000>;
-			no-map;
-		};
 
 		wcnss_fw_mem: wcnss@8e800000 {
 			reg = <0x0 0x8e800000 0x0 0x700000>;
@@ -76,10 +72,7 @@
 		ramoops@9ff00000 {
 			compatible = "ramoops";
 			reg = <0x0 0x9ff00000 0x0 0x00100000>;
-			record-size = <0x1000>;
-			console-size = <0x80000>;
-			ftrace-size = <0x1000>;
-			pmsg-size = <0x8000>;
+			console-size = <0x100000>;
 		};
 	};
 
@@ -113,8 +106,8 @@
 			vdd-supply = <&pm8953_l10>;
 			vddio-supply = <&pm8953_l6>;
 
-			mount-matrix = "0", "1", "0",
-					"1", "0", "0",
+			mount-matrix = "-1", "0", "0",
+					"0", "-1", "0",
 					"0", "0", "1";
 		};
 	};
