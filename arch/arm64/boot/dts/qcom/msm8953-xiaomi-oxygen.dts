@@ -6,6 +6,7 @@
 
 /delete-node/ &cont_splash_mem;
 /delete-node/ &qseecom_mem;
+/delete-node/ &wcnss_fw_mem;
 
 / {
 	qcom,msm-id = <293 0x0>;
@@ -65,10 +66,10 @@
 		};
 
 
-		// wcnss_fw_mem: wcnss@8e800000 {
-		// 	reg = <0x0 0x8e800000 0x0 0x700000>;
-		// 	no-map;
-		// };
+		wcnss_fw_mem: wcnss@8e800000 {
+			reg = <0x0 0x8e800000 0x0 0x700000>;
+			no-map;
+		};
 		ramoops@9ff00000 {
 			compatible = "ramoops";
 			reg = <0x0 0x9ff00000 0x0 0x00100000>;
