@@ -4,8 +4,9 @@
 #include "msm8953-xiaomi-common.dtsi"
 #include <dt-bindings/input/atmel-maxtouch.h>
 
+/delete-node/ &adsp_fw_mem;
 /delete-node/ &qseecom_mem;
-
+/delete-node/ &wcnss_fw_mem;
 / {
 	qcom,msm-id = <293 0x0>;
 	qcom,board-id = <26 0>;
@@ -53,20 +54,25 @@
 	};
 
 	reserved-memory {
-		/delete-node/memory@85b00000;
-
-		/delete-node/memory@90001000;
 		cont_splash_mem: cont-splash@90001000 {
 			reg = <0 0x90001000 0 (1080 * 1920 * 3)>;
 			no-map;
 		};
 
-		/delete-node/memory@85b00000;
 		qseecom_mem: qseecom@84a00000 {
 			reg = <0x0 0x84a00000 0x0 0x1900000>;
 			no-map;
 		};
 
+		adsp_fw_mem: adsp@8d600000 {
+			reg = <0x0 0x8d600000 0x0 0x1200000>;
+			no-map;
+		};
+
+		wcnss_fw_mem: wcnss@8e800000 {
+			reg = <0x0 0x8e800000 0x0 0x700000>;
+			no-map;
+		};
 		ramoops@9ff00000 {
 			compatible = "ramoops";
 			reg = <0x0 0x9ff00000 0x0 0x00100000>;
@@ -107,8 +113,8 @@
 			vdd-supply = <&pm8953_l10>;
 			vddio-supply = <&pm8953_l6>;
 
-			mount-matrix = "0", "-1", "0",
-					"-1", "0", "0",
+			mount-matrix = "0", "1", "0",
+					"1", "0", "0",
 					"0", "0", "1";
 		};
 	};
@@ -173,71 +179,76 @@
 	};
 
 };
+&i2c_3 {
+	ft5x46_ts: touchscreen@38 {
+		compatible = "ft,ft5x46_i2c";
+		status = "okay";
+		reg = <0x38>;
 
-&ft5x46_ts {
-	status = "okay";
-	touchscreen-size-x = <1080>;
-	touchscreen-size-y = <1920>;
-
-
-	vddio-supply = <&tp1v8_vreg>;
-	vdd-supply = <&tp2v8_vreg>;
-	/* pins used by touchscreen */
-	pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
-	pinctrl-0 = <&ts_int_active &ts_reset_active>;
-	pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
-	ft5x46_i2c,i2c-pull-up;
-	ft5x46_i2c,irqflags = <0x2008>;
-	ft5x46_i2c,x-max = <1080>;
-	ft5x46_i2c,y-max = <1920>;
-	ft5x46_i2c,z-max = <255>;
-	ft5x46_i2c,w-max = <200>;
-	ft5x46_i2c,reset-gpio = <&tlmm 64 0x00>;
-	ft5x46_i2c,irq-gpio = <&tlmm 65 0x2008>;
-	ft5x46_i2c,landing-jiffies = <1000>;
-	ft5x46_i2c,landing-threshold = <16>;
-	ft5x46_i2c,staying-threshold = <8>;
-	ft5x46_i2c,raw-min = <7000>;
-	ft5x46_i2c,raw-max = <10000>;
-	ft5x46_i2c,has-key;
-	ft5x46_i2c,key-rx1 = <4>;
-	ft5x46_i2c,key-rx2 = <8>;
-	ft5x46_i2c,key-rx3 = <12>;
-	ft5x46_i2c,open-min = <4000>;
-	ft5x46_i2c,imin-cc = <500>;
-	ft5x46_i2c,imin-cg = <500>;
-	ft5x46_i2c,fw-delay-55-ms = <2>;
-	ft5x46_i2c,fw-delay-aa-ms = <2>;
-	ft5x46_i2c,fw-upgrade-id1 = <0x54>;
-	ft5x46_i2c,fw-upgrade-id2 = <0x2C>;
-	ft5x46_i2c,fw-delay-readid-ms = <20>;
-	ft5x46_i2c,firmware-array-size = <3>;
-	ft5x46_i2c,cfg_0 {
-		ft5x46_i2c,chip = <0x54>;
-		ft5x46_i2c,vendor = <0x3b>;
-		ft5x46_i2c,lcd-vendor = <0x36>;
-		ft5x46_i2c,fw-name = "ft5446_biel.fw";
-		ft5x46_i2c,tx-num = <24>;
-		ft5x46_i2c,rx-num = <13>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
+		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
+		iovcc-supply = <&pm8953_l6>;
+		vcc-supply = <&pm8953_l10>;
+		status = "okay";
+		vddio-supply = <&tp1v8_vreg>;
+		vdd-supply = <&tp2v8_vreg>;
+		/* pins used by touchscreen */
+		pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
+		pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+		ft5x46_i2c,i2c-pull-up;
+		ft5x46_i2c,irqflags = <0x2008>;
+		ft5x46_i2c,x-max = <1080>;
+		ft5x46_i2c,y-max = <1920>;
+		ft5x46_i2c,z-max = <255>;
+		ft5x46_i2c,w-max = <200>;
+		ft5x46_i2c,reset-gpio = <&tlmm 64 0x00>;
+		ft5x46_i2c,irq-gpio = <&tlmm 65 0x2008>;
+		ft5x46_i2c,landing-jiffies = <1000>;
+		ft5x46_i2c,landing-threshold = <16>;
+		ft5x46_i2c,staying-threshold = <8>;
+		ft5x46_i2c,raw-min = <7000>;
+		ft5x46_i2c,raw-max = <10000>;
+		ft5x46_i2c,has-key;
+		ft5x46_i2c,key-rx1 = <4>;
+		ft5x46_i2c,key-rx2 = <8>;
+		ft5x46_i2c,key-rx3 = <12>;
+		ft5x46_i2c,open-min = <4000>;
+		ft5x46_i2c,imin-cc = <500>;
+		ft5x46_i2c,imin-cg = <500>;
+		ft5x46_i2c,fw-delay-55-ms = <2>;
+		ft5x46_i2c,fw-delay-aa-ms = <2>;
+		ft5x46_i2c,fw-upgrade-id1 = <0x54>;
+		ft5x46_i2c,fw-upgrade-id2 = <0x2C>;
+		ft5x46_i2c,fw-delay-readid-ms = <20>;
+		ft5x46_i2c,firmware-array-size = <3>;
+		ft5x46_i2c,cfg_0 {
+			ft5x46_i2c,chip = <0x54>;
+			ft5x46_i2c,vendor = <0x3b>;
+			ft5x46_i2c,lcd-vendor = <0x36>;
+			ft5x46_i2c,fw-name = "ft5446_biel.fw";
+			ft5x46_i2c,tx-num = <24>;
+			ft5x46_i2c,rx-num = <13>;
+		};
+		ft5x46_i2c,cfg_1 {
+			ft5x46_i2c,chip = <0x54>;
+			ft5x46_i2c,vendor = <0x51>;
+			ft5x46_i2c,lcd-vendor = <0x36>;
+			ft5x46_i2c,fw-name = "ft5446_ofilm.fw";
+			ft5x46_i2c,tx-num = <24>;
+			ft5x46_i2c,rx-num = <13>;
+		};
+		ft5x46_i2c,cfg_2 {
+			ft5x46_i2c,chip = <0x54>;
+			ft5x46_i2c,vendor = <0x3b>;
+			ft5x46_i2c,lcd-vendor = <0x34>;
+			ft5x46_i2c,fw-name = "ft5446_biel_auo.fw";
+			ft5x46_i2c,tx-num = <24>;
+			ft5x46_i2c,rx-num = <13>;
+		};	
 	};
-	ft5x46_i2c,cfg_1 {
-		ft5x46_i2c,chip = <0x54>;
-		ft5x46_i2c,vendor = <0x51>;
-		ft5x46_i2c,lcd-vendor = <0x36>;
-		ft5x46_i2c,fw-name = "ft5446_ofilm.fw";
-		ft5x46_i2c,tx-num = <24>;
-		ft5x46_i2c,rx-num = <13>;
-	};
-	ft5x46_i2c,cfg_2 {
-		ft5x46_i2c,chip = <0x54>;
-		ft5x46_i2c,vendor = <0x3b>;
-		ft5x46_i2c,lcd-vendor = <0x34>;
-		ft5x46_i2c,fw-name = "ft5446_biel_auo.fw";
-		ft5x46_i2c,tx-num = <24>;
-		ft5x46_i2c,rx-num = <13>;
-	};	
-};
-
+}
 
 
 
