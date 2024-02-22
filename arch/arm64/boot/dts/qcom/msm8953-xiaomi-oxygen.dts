@@ -256,7 +256,6 @@
 
 	aux-devs = <&speaker_amp>;
 	audio-routing =
-    qcom,audio-routing =
 		"RX_BIAS", "MCLK",
 		"SPK_RX_BIAS", "MCLK",
 		"INT_LDO_H", "MCLK",
