@@ -224,6 +224,24 @@
 		pinctrl-2 = <&spk_id_no_pull>;
 	};
 };
+
+&i2c_2 { /* BLSP2 QUP1 (TAS2560) */
+	tas2560@4e {
+		compatible = "ti,tas2560s";
+		reg = <0x4e>;
+		ti,cdc-left-reset-gpio = <&tlmm 127 0>;
+		ti,cdc-right-reset-gpio = <&tlmm 20 0>;
+		ti,cdc-left-irq-gpio = <&tlmm 63 0>;
+		ti,cdc-right-irq-gpio = <&tlmm 21 0>;
+		ti,left-channel = <0x4f>;
+		ti,right-channel = <0x4c>;
+		ti,left-load = <0>;   /* 0, 8Ohm; 1, 6Ohm; 2, 4Ohm */
+		ti,right-load-aac = <0>;   /* 0, 8Ohm; 1, 6Ohm; 2, 4Ohm */
+		ti,right-load-ssi = <0>;   /* 0, 8Ohm; 1, 6Ohm; 2, 4Ohm */
+		ti,spk-id-pin = <&spk_id_pin>;
+
+	};
+};
 &i2c_3 {
 	ft5x46_ts: touchscreen@38 {
 		compatible = "ft,ft5x46_i2c";
