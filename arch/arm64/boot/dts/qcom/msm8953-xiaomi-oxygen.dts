@@ -154,46 +154,6 @@
 &panel {
 	compatible = "xiaomi,oxygen-panel"; 
 };
-&tlmm {
-		spk_id {
-		spk_id_no_pull: spk_id_no_pull {
-			mux {
-				pins = "gpio9";
-				function = "gpio";
-			};
-			config {
-				pins = "gpio9";
-				drive-strength = <8>;
-				bias-disable;
-				input-enable;
-			};
-		};
-		spk_id_pull_up: spk_id_pull_up {
-			mux {
-				pins = "gpio9";
-				function = "gpio";
-			};
-			config {
-				pins = "gpio9";
-				drive-strength = <8>;
-				bias-pull-up;
-				input-enable;
-			};
-		};
-		spk_id_pull_down: spk_id_pull_down {
-			mux {
-				pins = "gpio9";
-				function = "gpio";
-			};
-			config {
-				pins = "gpio9";
-				drive-strength = <8>;
-				bias-pull-down;
-				input-enable;
-			};
-		};
-	};
-};
 
 &soc {
 	tp1v8_vreg: tp1v8_vreg {
@@ -215,32 +175,7 @@
 		startup-delay-us = <5000>;
 		enable-active-high;
 	};
-	spk_id_pin: spk-id-pin@9 {
-		compatible = "audio,speaker-id";
-		audio,speaker-id-gpio = <&tlmm 9 0x00>;
-		pinctrl-names = "pull_down", "pull_up", "no_pull";
-		pinctrl-0 = <&spk_id_pull_down>;
-		pinctrl-1 = <&spk_id_pull_up>;
-		pinctrl-2 = <&spk_id_no_pull>;
-	};
-};
 
-&i2c_2 { /* BLSP2 QUP1 (TAS2560) */
-	tas2560@4e {
-		compatible = "ti,tas2560s";
-		reg = <0x4e>;
-		ti,cdc-left-reset-gpio = <&tlmm 127 0>;
-		ti,cdc-right-reset-gpio = <&tlmm 20 0>;
-		ti,cdc-left-irq-gpio = <&tlmm 63 0>;
-		ti,cdc-right-irq-gpio = <&tlmm 21 0>;
-		ti,left-channel = <0x4f>;
-		ti,right-channel = <0x4c>;
-		ti,left-load = <0>;   /* 0, 8Ohm; 1, 6Ohm; 2, 4Ohm */
-		ti,right-load-aac = <0>;   /* 0, 8Ohm; 1, 6Ohm; 2, 4Ohm */
-		ti,right-load-ssi = <0>;   /* 0, 8Ohm; 1, 6Ohm; 2, 4Ohm */
-		ti,spk-id-pin = <&spk_id_pin>;
-
-	};
 };
 &i2c_3 {
 	ft5x46_ts: touchscreen@38 {
@@ -321,6 +256,7 @@
 
 	aux-devs = <&speaker_amp>;
 	audio-routing =
+    qcom,audio-routing =
 		"RX_BIAS", "MCLK",
 		"SPK_RX_BIAS", "MCLK",
 		"INT_LDO_H", "MCLK",
